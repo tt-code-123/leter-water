@@ -24,8 +24,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['search', 'input'])
 const searchValue = ref('')
-const handleInput = (e: Event) => {
-  emit('input', '')
+const handleInput = (e: any) => {
+  emit('input', e.detail.value)
 }
 
 const handleConfirm = () => {

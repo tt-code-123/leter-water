@@ -1,8 +1,8 @@
 <template>
   <scroll-view class="scroll-container" :lower-threshold="lowerThreshold" :scroll-y="true"
-    :style="{ height: containerHeight }" @scrolltolower="loadMore">
+    :style="{ height: containerHeight, ...styles }" @scrolltolower="loadMore">
     <!-- 数据列表 -->
-    <slot :list="dataList"></slot>
+    <slot :list="dataList" name="default"></slot>
 
     <!-- 加载状态 -->
     <view class="loading-status">
@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends Record<string, any>">
 import { ref, onMounted, watch } from 'vue'
 
 const props = defineProps({
@@ -53,13 +53,27 @@ const props = defineProps({
   searchParams: {
     type: Object,
     default: () => ({})
+  },
+  styles: {
+    type: Object,
+    default: () => ({})
   }
 })
+
+const slot = defineSlots<{
+  default(props: {
+    list: any[]
+  }): any,
+  loading(props: any): any,
+  nomore(props: any): any
+}>()
+
+const emit = defineEmits(['fetchEnd'])
 
 // 当前页码
 const currentPage = ref(1)
 // 数据列表
-const dataList = ref([])
+const dataList = ref<T[]>([])
 // 加载状态
 const loading = ref(false)
 // 是否还有更多
@@ -121,6 +135,7 @@ const loadData = async () => {
   } catch (e) {
     console.error('数据加载失败:', e)
   } finally {
+    emit('fetchEnd', dataList.value)
     loading.value = false
   }
 }
@@ -143,6 +158,8 @@ defineExpose({
 <style scoped>
 .scroll-container {
   box-sizing: border-box;
+  background-color: #f0f0f0;
+  padding: 16rpx;
 }
 
 .loading-status {

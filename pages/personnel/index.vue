@@ -20,10 +20,8 @@ function fetchData() {
 
 const containerHeight = computed(() => {
   const windowHeight = getWindowHeight()
-  return windowHeight - rpxToPx(262) + 'px'
+  return windowHeight - rpxToPx(294) + 'px'
 })
 
 </script>
-<style lang="" scoped>
-
-</style>
+<style scoped></style>
