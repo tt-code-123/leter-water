@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "types": ["@dcloudio/types","vue"],
+    "lib": ["esnext", "dom"],
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./*"], // 与webpack配置的@别名对应
+    }
+  },
+  "exclude": ["node_modules"]
+}
