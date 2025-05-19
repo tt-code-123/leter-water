@@ -1,4 +1,5 @@
 import App from "./App.vue";
+import uviewPlus from '@/uni_modules/uview-plus'
 
 // #ifndef VUE3
 import Vue from "vue.vue";
@@ -16,6 +17,7 @@ import { createSSRApp } from "vue";
 import uniIcons from "@/uni_modules/uni-icons/components/uni-icons/uni-icons.vue";
 export function createApp() {
   const app = createSSRApp(App);
+  app.use(uviewPlus);
   app.component("uni-icons", uniIcons);
   return {
     app,

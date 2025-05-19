@@ -4,6 +4,12 @@ declare module "*.vue" {
   export default component;
 }
 
+declare module '@/uni_modules/uview-plus' {
+  import { PluginObject } from 'vue';
+  const uviewPlus: PluginObject<any>;
+  export default uviewPlus;
+}
+
 // 声明图片、字体等静态资源类型
 declare module "*.png";
 declare module "*.jpg";
