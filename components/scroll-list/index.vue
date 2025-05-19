@@ -155,7 +155,7 @@ defineExpose({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .scroll-container {
   box-sizing: border-box;
   background-color: #f0f0f0;
@@ -170,7 +170,6 @@ defineExpose({
 
 .default-loading,
 .default-nomore {
-  padding: 20rpx 0;
   font-size: 24rpx;
 }
 </style>

@@ -43,7 +43,7 @@ function handleClick(type: string) {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .bottom-bar {
   display: flex;
   border-top: 2rpx solid #eee;

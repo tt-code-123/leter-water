@@ -5,9 +5,21 @@
       keywords: searchKeyword
     }" :fetchData="fetchData" @fetchEnd="handleFetchEnd">
       <template #default="{ list }">
-        <view v-for="item in list" :key="item.id" class="list-item">
-          {{ item.title }}
-        </view>
+        <common-list-item v-for="(item, index) in list" :key="item.id" :title="item.title" :itemIndex="index"
+          :itemOptions="[
+            {
+              label: '统一社会信用代码',
+              value: item.code
+            },
+            {
+              label: '企业法人代表',
+              value: item.legal_person
+            },
+            {
+              label: '企业注册属地',
+              value: item.address
+            },
+          ]"></common-list-item>
       </template>
     </scroll-list>
     <bottom-bar></bottom-bar>
@@ -18,6 +30,7 @@ import { computed, ref } from 'vue'
 import BottomBar from '@/components/bottom-bar/index.vue'
 import SearchBox from '@/components/search-box/index.vue'
 import ScrollList from '@/components/scroll-list/index.vue'
+import CommonListItem from '@/components/common-list-item/index.vue'
 import { rpxToPx, getWindowHeight } from '@/utils'
 
 const searchKeyword = ref('')
@@ -44,17 +57,23 @@ function fetchData() {
         {
           id: 1,
           title: '标题1',
-          content: '内容1'
+          code: '156456456132132',
+          legal_person: '张三',
+          address: '陕西'
         },
         {
           id: 2,
           title: '标题2',
-          content: '内容2'
+          code: '5132132132',
+          legal_person: '李四',
+          address: '南明'
         },
         {
           id: 3,
           title: '标题3',
-          content: '内容3'
+          code: '121324564564',
+          legal_person: '王五',
+          address: '永春'
         }
       ]
     }
@@ -67,4 +86,4 @@ const containerHeight = computed(() => {
 })
 
 </script>
-<style scoped></style>
+<style lang="scss" scoped></style>

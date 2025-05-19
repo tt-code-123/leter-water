@@ -33,7 +33,7 @@ const handleConfirm = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .search-box {
   padding: 24rpx;
   background-color: #2a8fff;
