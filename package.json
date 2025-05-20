@@ -10,6 +10,7 @@
   "description": "",
   "devDependencies": {
     "@dcloudio/types": "^3.4.15",
+    "@dcloudio/uni-app": "^2.0.2-4060520250512001",
     "@types/node": "^22.15.18",
     "@types/vue": "^2.0.0",
     "typescript": "^5.8.3"

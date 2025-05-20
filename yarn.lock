@@ -32,6 +32,11 @@
   resolved "https://registry.yarnpkg.com/@dcloudio/types/-/types-3.4.15.tgz#0861bfcf79b04111f0ac99474cf00b1d1d4f0e29"
   integrity sha512-Y8n/Z7USQoYFWUYZBLVjLXV3G5E/Odnvy3Ldgri4ikCcyQqHRk6RRaLh0WWnuIkxQxz2MXqLH4JNN65sb00XIA==
 
+"@dcloudio/uni-app@^2.0.2-4060520250512001":
+  version "2.0.2-4060520250512001"
+  resolved "https://registry.yarnpkg.com/@dcloudio/uni-app/-/uni-app-2.0.2-4060520250512001.tgz#eb08e34cff0390474f07c4744bd6e645e2010616"
+  integrity sha512-GE4poKcQWPjTjm9SdJr74DKtAxNiCVk+r+te2XFW+XdXCdB17KJupb/yJgckccIJjnEQLCkdHK9O5oX3DbcWNA==
+
 "@jridgewell/sourcemap-codec@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.0.tgz#3188bcb273a414b0d215fd22a58540b989b9409a"

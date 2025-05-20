@@ -4,6 +4,8 @@
 node_modules
 .pnp
 .pnp.js
+.hbuilderx/
+.unpackage/
 
 # Local env files
 .env

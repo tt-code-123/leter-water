@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "baseUrl": "./",
-    "types": ["@dcloudio/types","vue", "uni-modules/uview-plus/types"],
+    "types": ["@dcloudio/types", "shims-vue.d.ts", "vue", "uni-modules/uview-plus/types"],
     "lib": ["esnext", "dom"],
     "skipLibCheck": true,
     "paths": {

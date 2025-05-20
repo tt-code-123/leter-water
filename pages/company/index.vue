@@ -19,7 +19,7 @@
               label: '企业注册属地',
               value: item.address
             },
-          ]"></common-list-item>
+          ]" @click="handleClickItem(item.id)"></common-list-item>
       </template>
     </scroll-list>
     <bottom-bar></bottom-bar>
@@ -77,6 +77,13 @@ function fetchData() {
         }
       ]
     }
+  })
+}
+
+
+function handleClickItem(id: number) {
+  uni.navigateTo({
+    url: `/pages/company-detail/index?id=${id}`
   })
 }
 

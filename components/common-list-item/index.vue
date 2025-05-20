@@ -1,5 +1,5 @@
 <template>
-  <view class="company-list-item">
+  <view class="company-list-item" @click="handleClickItem">
     <view class="item">
       <text class="item-title common-left">{{ `${itemIndex + 1}.${title}` }}</text>
       <uni-icons v-if="showArrow" type="right" color="#cacaca" size="18"></uni-icons>
@@ -35,6 +35,12 @@ const props = defineProps({
     default: true
   }
 })
+
+const emit = defineEmits(['click'])
+
+function handleClickItem() {
+  emit('click')
+}
 
 </script>
 

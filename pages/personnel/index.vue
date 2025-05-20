@@ -19,7 +19,7 @@
               label: '注册号(执行印号)',
               value: item.registrationNumber
             },
-          ]"></common-list-item>
+          ]" @click="handleClickItem(item.id)"></common-list-item>
       </template>
     </scroll-list>
     <bottom-bar></bottom-bar>
@@ -81,6 +81,11 @@ function handleFetchEnd() {
   uni.hideLoading()
 }
 
+function handleClickItem(id: number) {
+  uni.navigateTo({
+    url: `/pages/personnel-detail/index?id=${id}`
+  })
+}
 
 
 const containerHeight = computed(() => {

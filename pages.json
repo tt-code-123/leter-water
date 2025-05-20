@@ -22,9 +22,23 @@
 			}
 		},
 		{
+			"path": "pages/company-detail/index",
+			"style": {
+				"navigationBarTitleText": "企业详情",
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/personnel/index",
 			"style": {
 				"navigationBarTitleText": "从业人员"
+			}
+		},
+		{
+			"path": "pages/personnel-detail/index",
+			"style": {
+				"navigationBarTitleText": "人员详情",
+				"navigationBarBackgroundColor": "#FFFFFF"
 			}
 		},
 		{

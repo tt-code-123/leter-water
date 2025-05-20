@@ -1,6 +1,12 @@
 declare module "*.vue" {
   import { DefineComponent } from "vue";
   const component: DefineComponent<{}, {}, any>;
+  interface ComponentCustomOptions {
+    onLoad?: (options?: any) => void;
+    onShow?: () => void;
+    onReady?: () => void;
+    // 添加其他 UniApp 生命周期钩子...
+  }
   export default component;
 }
 
