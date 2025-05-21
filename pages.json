@@ -24,8 +24,7 @@
 		{
 			"path": "pages/company-detail/index",
 			"style": {
-				"navigationBarTitleText": "企业详情",
-				"navigationBarBackgroundColor": "#FFFFFF"
+				"navigationBarTitleText": "企业详情"
 			}
 		},
 		{
@@ -37,8 +36,7 @@
 		{
 			"path": "pages/personnel-detail/index",
 			"style": {
-				"navigationBarTitleText": "人员详情",
-				"navigationBarBackgroundColor": "#FFFFFF"
+				"navigationBarTitleText": "人员详情"
 			}
 		},
 		{
@@ -52,13 +50,31 @@
 			"style": {
 				"navigationBarTitleText": "我的"
 			}
+		},
+		{
+			"path": "pages/collection/index",
+			"style": {
+				"navigationBarTitleText": "我的-收藏"
+			}
+		},
+		{
+			"path": "pages/history/index",
+			"style": {
+				"navigationBarTitleText": "我的-历史浏览记录"
+			}
+		},
+		{
+			"path": "pages/feedback/index",
+			"style": {
+				"navigationBarTitleText": "意见反馈"
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
 	},
 	"uniIdRouter": {}
 }

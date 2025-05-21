@@ -5,7 +5,8 @@
       <text class="mine-header-name">微信用户</text>
     </view>
     <view class="mine-list">
-      <mine-cell v-for="(item, index) in cellList" :key="index" :title="item.title" class="mine-list-item">
+      <mine-cell v-for="(item, index) in cellList" :key="index" :title="item.title" @click="handleTo(item.page)"
+        class="mine-list-item">
         <template #icon>
           <up-icon :name="item.icon" size="24" :color="item.iconColor" />
         </template>
@@ -21,19 +22,28 @@ const cellList = reactive([
   {
     title: '收藏关注',
     icon: 'star',
-    iconColor: 'orange'
+    iconColor: 'orange',
+    page: 'collection'
   },
   {
     title: '历史浏览记录',
     icon: 'clock',
-    iconColor: '#55aaff'
+    iconColor: '#55aaff',
+    page: 'history'
   },
   {
     title: '意见反馈',
     icon: 'clock',
-    iconColor: '#55aaff'
+    iconColor: '#55aaff',
+    page: 'feedback'
   },
 ])
+
+function handleTo(type: string) {
+  uni.navigateTo({
+    url: `/pages/${type}/index`
+  })
+}
 
 </script>
 <style lang="scss" scoped>

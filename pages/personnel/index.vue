@@ -1,7 +1,7 @@
 <template>
   <view>
     <search-box placeholder="请输入关键字" @search="handleSearch"></search-box>
-    <scroll-list :containerHeight="containerHeight" :searchParams="{
+    <scroll-list :containerHeight="containerHeight" :params="{
       keywords: searchKeyword
     }" :fetchData="fetchData" @fetchEnd="handleFetchEnd">
       <template #default="{ list }">

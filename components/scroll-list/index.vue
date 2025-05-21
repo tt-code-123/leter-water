@@ -4,8 +4,12 @@
     <!-- 数据列表 -->
     <slot :list="dataList" name="default"></slot>
 
+    <!-- 空状态 -->
+    <slot v-if="!loading && !dataList.length" name="empty">
+      <view class="default-empty">{{ emptyDesc }}</view>
+    </slot>
     <!-- 加载状态 -->
-    <view class="loading-status">
+    <view class="loading-status" v-else>
       <!-- 加载中 -->
       <slot v-if="loading" name="loading">
         <view class="default-loading">加载中...</view>
@@ -49,14 +53,18 @@ const props = defineProps({
     type: Number,
     default: 50
   },
-  // 搜索参数（响应式）
-  searchParams: {
+  // 参数（响应式）
+  params: {
     type: Object,
     default: () => ({})
   },
   styles: {
     type: Object,
     default: () => ({})
+  },
+  emptyDesc: {
+    type: String,
+    default: '暂无数据'
   }
 })
 
@@ -65,7 +73,8 @@ const slot = defineSlots<{
     list: any[]
   }): any,
   loading(props: any): any,
-  nomore(props: any): any
+  nomore(props: any): any,
+  empty(props: any): any,
 }>()
 
 const emit = defineEmits(['fetchEnd'])
@@ -81,7 +90,7 @@ const noMore = ref(false)
 
 // 监听搜索参数变化（新增）
 watch(
-  () => props.searchParams,
+  () => props.params,
   (newVal, oldVal) => {
     if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
       initLoad()
@@ -114,7 +123,7 @@ const loadData = async () => {
     const params = {
       page: currentPage.value,
       pageSize: props.pageSize,
-      ...props.searchParams  // 合并搜索参数
+      ...props.params  // 合并搜索参数
     }
 
     const res = await props.fetchData(params)
@@ -171,5 +180,13 @@ defineExpose({
 .default-loading,
 .default-nomore {
   font-size: 24rpx;
+}
+
+.default-empty {
+  height: 100%;
+  font-size: 24rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <view class="mine-cell">
+  <view class="mine-cell" @click="handleClick">
     <view class="mine-cell-left">
       <slot name="icon"></slot>
       <text class="mine-cell-title">{{ title }}</text>
@@ -26,6 +26,12 @@ const props = defineProps({
 const slot = defineSlots<{
   icon: () => any
 }>()
+const emit = defineEmits(['click'])
+
+function handleClick() {
+  emit('click')
+}
+
 </script>
 <style lang="scss" scoped>
 .mine-cell {
