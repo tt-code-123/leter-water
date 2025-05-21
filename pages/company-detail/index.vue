@@ -64,56 +64,43 @@
       color: '#1677ff'
     }" class="tabs-list" v-model:current="tabIndex"></up-tabs>
     <template v-if="tabIndex === 0">
-      <scroll-view class="scroll-view" :scroll-y="true">
-        <view v-for="(item, index) in detailList" :key="item.id" class="detail-item">
-          <view>{{ index + 1 }}、</view>
-          <up-table>
-            <up-tr>
-              <up-td width="30%">资质类别</up-td>
-              <up-td>勘察</up-td>
-            </up-tr>
-            <up-tr>
-              <up-td width="30%">专业类别/许可证</up-td>
-              <up-td>0001412</up-td>
-            </up-tr>
-            <up-tr>
-              <up-td width="30%">等级</up-td>
-              <up-td>111</up-td>
-            </up-tr>
-            <up-tr>
-              <up-td width="30%">资质证书号</up-td>
-              <up-td>111</up-td>
-            </up-tr>
-            <up-tr>
-              <up-td width="30%">发证日期</up-td>
-              <up-td>111</up-td>
-            </up-tr>
-            <up-tr>
-              <up-td width="30%">发证有效期</up-td>
-              <up-td>111</up-td>
-            </up-tr>
-            <up-tr>
-              <up-td width="30%">发证机关</up-td>
-              <up-td>中华人民共和国住房和城乡建设部</up-td>
-            </up-tr>
-          </up-table>
-        </view>
-      </scroll-view>
+      <enterprise-qualifications v-if="tabIndex === 0" class="common-comp-container"></enterprise-qualifications>
     </template>
-    <template v-else-if="tabIndex === 1"></template>
-    <template v-else-if="tabIndex === 2"></template>
-    <template v-else-if="tabIndex === 3"></template>
-    <template v-else-if="tabIndex === 4"></template>
-    <template v-else-if="tabIndex === 5"></template>
-    <template v-else-if="tabIndex === 6"></template>
-    <template v-else-if="tabIndex === 7"></template>
-    <template v-else-if="tabIndex === 8"></template>
+    <template v-else-if="tabIndex === 1">
+      <registered-personnel class="common-comp-container"></registered-personnel>
+    </template>
+    <template v-else-if="tabIndex === 2">
+      <engineering-project class="common-comp-container"></engineering-project>
+    </template>
+    <template v-else-if="tabIndex === 3">
+      <good-conduct class="common-comp-container"></good-conduct>
+    </template>
+    <template v-else-if="tabIndex === 4">
+      <bad-behavior class="common-comp-container"></bad-behavior>
+    </template>
+    <template v-else-if="tabIndex === 5">
+      <list-focuses class="common-comp-container"></list-focuses>
+    </template>
+    <template v-else-if="tabIndex === 6">
+      <blacklist-record class="common-comp-container"></blacklist-record>
+    </template>
+    <template v-else-if="tabIndex === 7">
+      <change-record class="common-comp-container"></change-record>
+    </template>
   </view>
-
 </template>
 <script setup lang="ts">
 import { onLoad } from '@dcloudio/uni-app'
 import { ref, reactive } from 'vue';
+
+import EnterpriseQualifications from './components/enterprise-qualifications/index.vue'
+import EngineeringProject from './components/engineering-project/index.vue'
+import RegisteredPersonnel from './components/registered-personnel/index.vue'
+import GoodConduct from './components/good-conduct/index.vue'
+import BadBehavior from './components/bad-behavior/index.vue'
+import BlacklistRecord from './components/blacklist-record/index.vue'
+import ListFocuses from './components/list-focuses/index.vue'
+import ChangeRecord from './components/change-record/index.vue'
 
 const detailId = ref('');
 const isCollect = ref(false);
@@ -121,7 +108,6 @@ const tabIndex = ref(0);
 const tabList = reactive([
   { name: '企业资质资格' },
   { name: '注册人员' },
-  { name: '工程人员' },
   { name: '工程项目' },
   { name: '良好行为' },
   { name: '不良行为' },
@@ -129,17 +115,7 @@ const tabList = reactive([
   { name: '黑名单记录' },
   { name: '变更记录' },
 ]);
-const detailList = reactive([
-  {
-    id: 1,
-  },
-  {
-    id: 2,
-  },
-  {
-    id: 3,
-  }
-])
+
 
 onLoad((options) => {
   detailId.value = options!.id;
@@ -253,6 +229,7 @@ function handleClickStar() {
   width: 100vw;
   margin-top: 24rpx;
   background-color: #fff;
+  border-bottom: 2rpx solid #f0f0f0;
 }
 
 .scroll-view {
@@ -260,5 +237,10 @@ function handleClickStar() {
   box-sizing: border-box;
   background-color: #fff;
   height: 0;
+}
+
+.common-comp-container {
+  height: 0;
+  flex: 1;
 }
 </style>
