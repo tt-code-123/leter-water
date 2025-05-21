@@ -3,12 +3,12 @@
     <up-tabs :list="tabList" :lineHeight="2" :activeStyle="{
       color: '#1677ff'
     }" class="tabs-list" v-model:current="tabIndex"></up-tabs>
-    <scroll-list class="collection-list" emptyDesc="暂无收藏数据" :styles="{
+    <scroll-list class="collection-list" emptyDescription="暂无收藏数据" :styles="{
       height: '100%',
       backgroundColor: '#fff'
     }" :params="{
       tab: tabIndex
-    }" :fetchData="fetchData"></scroll-list>
+    }" :request="fetchData"></scroll-list>
   </view>
 </template>
 <script lang="ts" setup>
@@ -29,9 +29,11 @@ function fetchData() {
     }, 2000)
   }).then(() => {
     return {
-      data: [
-
-      ]
+      page: {
+        size: 0,
+        total: 0
+      },
+      content: []
     }
   })
 }

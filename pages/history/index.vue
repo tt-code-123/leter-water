@@ -10,7 +10,7 @@
     }" :params="{
       tab: tabIndex,
       keywords: searchKeyword
-    }" :fetchData="fetchData" @fetchEnd="handleFetchEnd"></scroll-list>
+    }" :request="fetchData"></scroll-list>
   </view>
 </template>
 <script lang="ts" setup>
@@ -41,9 +41,13 @@ function fetchData() {
     }, 2000)
   }).then(() => {
     return {
-      data: [
+      content: [
 
-      ]
+      ],
+      page: {
+        size: 0,
+        total: 0
+      }
     }
   })
 }

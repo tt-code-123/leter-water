@@ -1,25 +1,24 @@
 <template>
   <view>
     <search-box placeholder="请输入关键字" @search="handleSearch"></search-box>
-    <scroll-list :containerHeight="containerHeight" :params="{
+    <scroll-list :styles="{ height: containerHeight }" :params="{
       keywords: searchKeyword
-    }" :fetchData="fetchData" @fetchEnd="handleFetchEnd">
-      <template #default="{ list }">
-        <common-list-item v-for="(item, index) in list" :key="item.id" :title="item.title" :itemIndex="index"
-          :itemOptions="[
-            {
-              label: '发布时间',
-              value: item.publishTime
-            },
-            {
-              label: '文章来源',
-              value: item.origin
-            },
-            {
-              label: '发布人',
-              value: item.publisher
-            },
-          ]"></common-list-item>
+    }" :request="fetchData">
+      <template #item="{ item, index }">
+        <common-list-item :title="item.title" :itemIndex="index" :itemOptions="[
+          {
+            label: '发布时间',
+            value: item.publishTime
+          },
+          {
+            label: '文章来源',
+            value: item.origin
+          },
+          {
+            label: '发布人',
+            value: item.publisher
+          },
+        ]"></common-list-item>
       </template>
     </scroll-list>
     <bottom-bar></bottom-bar>
@@ -42,10 +41,6 @@ function handleSearch(searchText: string) {
   searchKeyword.value = searchText
 }
 
-function handleFetchEnd() {
-  uni.hideLoading()
-}
-
 function fetchData() {
   return new Promise(resolve => {
     setTimeout(() => {
@@ -53,7 +48,7 @@ function fetchData() {
     }, 2000)
   }).then(() => {
     return {
-      data: [
+      content: [
         {
           id: 1,
           title: '关于水利水电工程施工资质备案信息',
@@ -75,7 +70,11 @@ function fetchData() {
           origin: '水利部',
           publisher: '水利部'
         }
-      ]
+      ],
+      page: {
+        size: 3,
+        total: 3
+      }
     }
   })
 }

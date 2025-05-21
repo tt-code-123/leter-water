@@ -1,25 +1,24 @@
 <template>
   <view>
     <search-box placeholder="请输入关键字" @search="handleSearch"></search-box>
-    <scroll-list :containerHeight="containerHeight" :params="{
+    <scroll-list :styles="{ height: containerHeight }" :params="{
       keywords: searchKeyword
-    }" :fetchData="fetchData" @fetchEnd="handleFetchEnd">
-      <template #default="{ list }">
-        <common-list-item v-for="(item, index) in list" :key="item.id" :title="item.title" :itemIndex="index"
-          :itemOptions="[
-            {
-              label: '身份证号',
-              value: item.code
-            },
-            {
-              label: '证书专业',
-              value: item.Professional
-            },
-            {
-              label: '注册号(执行印号)',
-              value: item.registrationNumber
-            },
-          ]" @click="handleClickItem(item.id)"></common-list-item>
+    }" :request="fetchData">
+      <template #item="{ item, index }">
+        <common-list-item :title="item.title" :itemIndex="index" :itemOptions="[
+          {
+            label: '身份证号',
+            value: item.code
+          },
+          {
+            label: '证书专业',
+            value: item.Professional
+          },
+          {
+            label: '注册号(执行印号)',
+            value: item.registrationNumber
+          },
+        ]" @click="handleClickItem(item.id)"></common-list-item>
       </template>
     </scroll-list>
     <bottom-bar></bottom-bar>
@@ -50,7 +49,7 @@ function fetchData() {
     }, 2000)
   }).then(() => {
     return {
-      data: [
+      content: [
         {
           id: 1,
           title: '张三',
@@ -72,7 +71,11 @@ function fetchData() {
           Professional: '量测',
           registrationNumber: 'JCY1321321'
         }
-      ]
+      ],
+      page: {
+        size: 3,
+        total: 3
+      }
     }
   })
 }

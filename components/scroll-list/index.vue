@@ -1,192 +1,196 @@
 <template>
-  <scroll-view class="scroll-container" :lower-threshold="lowerThreshold" :scroll-y="true"
-    :style="{ height: containerHeight, ...styles }" @scrolltolower="loadMore">
-    <!-- 数据列表 -->
-    <slot :list="dataList" name="default"></slot>
+  <scroll-view scroll-y :show-scrollbar="false" :lower-threshold="lowerThreshold" @scrolltolower="handleScrollToLower"
+    :style="scrollStyle" :class="['scroll-list-wrap', className]">
 
     <!-- 空状态 -->
-    <slot v-if="!loading && !dataList.length" name="empty">
-      <view class="default-empty">{{ emptyDesc }}</view>
-    </slot>
-    <!-- 加载状态 -->
-    <view class="loading-status" v-else>
-      <!-- 加载中 -->
-      <slot v-if="loading" name="loading">
-        <view class="default-loading">加载中...</view>
-      </slot>
+    <up-empty v-if="!loading && !list.length" mode="data" :text="emptyDescription" style="height: 100%;">
+      <template v-if="emptyIcon">
+        <slot name="empty-icon" />
+      </template>
+      <slot v-if="$slots.extra && !list.length" name="extra" />
+    </up-empty>
 
-      <!-- 没有更多了 -->
-      <slot v-if="noMore" name="nomore">
-        <view class="default-nomore">没有更多数据了~</view>
-      </slot>
+    <!-- 加载中状态 -->
+    <up-loading-page v-if="loading && !list.length" :loading-text="loadingText" icon-size="40" />
+
+    <!-- 列表内容 -->
+    <view v-for="(item, index) in list" :key="index" :style="itemStyle">
+      <slot name="item" :item="item" :index="index" :total="list.length" />
+    </view>
+
+    <!-- 底部加载状态 -->
+    <view class="loading-footer">
+      <up-loadmore v-if="list.length" :status="loadStatus" :load-text="loadText" />
+      <slot v-if="$slots.extra && list.length" name="extra" />
     </view>
   </scroll-view>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'ScrollList'
-}
-</script>
+<script setup lang="ts">
+import {
+  ref,
+  reactive,
+  computed,
+  useAttrs,
+  onMounted,
+  nextTick,
+  CSSProperties
+} from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 
-<script setup lang="ts" generic="T extends Record<string, any>">
-import { ref, onMounted, watch } from 'vue'
-
-const props = defineProps({
-  // 容器高度（默认满屏）
-  containerHeight: {
-    type: String,
-    default: '100vh'
-  },
-  // 数据请求方法
-  fetchData: {
-    type: Function,
-    required: true
-  },
-  // 每页数量
-  pageSize: {
-    type: Number,
-    default: 10
-  },
-  // 触底距离阈值（单位px）
-  lowerThreshold: {
-    type: Number,
-    default: 50
-  },
-  // 参数（响应式）
-  params: {
-    type: Object,
-    default: () => ({})
-  },
-  styles: {
-    type: Object,
-    default: () => ({})
-  },
-  emptyDesc: {
-    type: String,
-    default: '暂无数据'
+interface PageData<T> {
+  page: {
+    size: number
+    total: number
   }
+  content: T[]
+}
+
+const props = withDefaults(defineProps<{
+  isScroll?: boolean
+  loadingText?: string
+  loadMoreText?: string
+  defaultSize?: number
+  emptyIcon?: string
+  emptyDescription?: string
+  isEffectFetch?: boolean
+  isShowFetch?: boolean
+  col?: number
+  className?: string
+  lowerThreshold?: number
+  styles?: CSSProperties
+  request: (page: { index: number; size: number }) => Promise<PageData<any>>
+}>(), {
+  isScroll: true,
+  defaultSize: 10,
+  col: 1,
+  lowerThreshold: 50,
+  isEffectFetch: false,
+  isShowFetch: true,
+  emptyDescription: '暂无数据',
+  styles: {} as any
 })
 
-const slot = defineSlots<{
-  default(props: {
-    list: any[]
-  }): any,
-  loading(props: any): any,
-  nomore(props: any): any,
-  empty(props: any): any,
-}>()
+const emits = defineEmits(['request-end'])
 
-const emit = defineEmits(['fetchEnd'])
-
-// 当前页码
-const currentPage = ref(1)
-// 数据列表
-const dataList = ref<T[]>([])
-// 加载状态
+const attrs = useAttrs()
 const loading = ref(false)
-// 是否还有更多
-const noMore = ref(false)
+const hasMore = ref(true)
+const list = ref<any[]>([])
+const page = reactive({
+  index: 1,
+  size: props.defaultSize
+})
+const pageTotal = ref(0)
 
-// 监听搜索参数变化（新增）
-watch(
-  () => props.params,
-  (newVal, oldVal) => {
-    if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
-      initLoad()
-    }
-  },
-  { deep: true }
-)
+// 计算属性
+const scrollStyle = computed(() => ({
+  textAlign: props.col === 1 ? 'left' : 'center',
+  ...props.styles
+}))
 
-// 初始化加载
-onMounted(() => {
-  initLoad()
+const itemStyle = computed(() => ({
+  width: `${100 / props.col - (props.col === 1 ? 0 : 2)}%`
+}))
+
+const loadStatus = computed(() => {
+  if (loading.value) return 'loading'
+  return hasMore.value ? 'loadmore' : 'nomore'
 })
 
-// 初始化加载数据
-const initLoad = async () => {
-  resetState()
-  await loadData()
+const loadText = computed(() => ({
+  loadmore: props.loadMoreText || '上拉加载更多',
+  loading: props.loadingText || '正在加载...',
+  nomore: '没有更多了'
+}))
+
+// 方法
+const refetchAllData = async () => {
+  const pageSize = page.size * page.index
+  await refetchData({
+    fetchSize: pageSize,
+    fetchIndex: 1,
+    reset: true
+  })
 }
 
-// 加载更多
-const loadMore = async () => {
-  if (loading.value || noMore.value) return
-  await loadData()
+const updateDataSource = (data: any[]) => {
+  list.value = data
 }
 
-// 核心数据加载方法
-const loadData = async () => {
+const reload = async () => {
+  page.index = 1
+  page.size = props.defaultSize
+  await refetchData({ reset: true })
+}
+
+const getDataSource = () => {
+  return list.value
+}
+
+const refetchData = async (params?: {
+  reset?: boolean
+  fetchSize?: number
+  fetchIndex?: number
+}) => {
+  loading.value = true
+  const { reset, fetchSize, fetchIndex } = params || {}
+
   try {
-    loading.value = true
-    const params = {
-      page: currentPage.value,
-      pageSize: props.pageSize,
-      ...props.params  // 合并搜索参数
-    }
+    const res = await props.request({
+      index: fetchIndex || (reset ? 1 : page.index),
+      size: fetchSize || page.size
+    })
 
-    const res = await props.fetchData(params)
+    const content = res.content
+    const total = res.page.total
+    const allData = reset ? [...content] : [...list.value, ...content]
 
-    if (res.data.length === 0) {
-      noMore.value = true
-      return
-    }
+    pageTotal.value = total
+    hasMore.value = allData.length < total
+    list.value = allData
+    emits('request-end', { data: allData })
 
-    dataList.value = [...dataList.value, ...res.data] as any
-
-    // 判断是否还有更多数据
-    if (res.data.length < props.pageSize) {
-      noMore.value = true
-    } else {
-      currentPage.value++
-    }
-  } catch (e) {
-    console.error('数据加载失败:', e)
+    await nextTick()
   } finally {
-    emit('fetchEnd', dataList.value)
     loading.value = false
   }
 }
 
-// 重置状态
-const resetState = () => {
-  currentPage.value = 1
-  dataList.value = []
-  loading.value = false
-  noMore.value = false
+const handleScrollToLower = async () => {
+  if (!hasMore.value || loading.value) return
+  page.index++
+  await refetchData({ fetchIndex: page.index })
 }
 
-// 暴露方法给父组件
+// 生命周期
+onShow(() => {
+  if (props.isShowFetch) refetchAllData()
+})
+
+onMounted(() => {
+  if (props.isEffectFetch) refetchAllData()
+})
+
+// 暴露方法
 defineExpose({
-  refresh: initLoad,
-  reset: resetState
+  refetchAllData,
+  reload,
+  getDataSource,
+  updateDataSource
 })
 </script>
 
 <style lang="scss" scoped>
-.scroll-container {
+.scroll-list-wrap {
+  position: relative;
   box-sizing: border-box;
   background-color: #f0f0f0;
   padding: 16rpx;
-}
 
-.loading-status {
-  padding: 20rpx;
-  text-align: center;
-  color: #999;
-}
-
-.default-loading,
-.default-nomore {
-  font-size: 24rpx;
-}
-
-.default-empty {
-  height: 100%;
-  font-size: 24rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  .loading-footer {
+    padding: 20rpx 0;
+    text-align: center;
+  }
 }
 </style>
