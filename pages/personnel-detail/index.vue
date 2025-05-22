@@ -23,9 +23,7 @@
         <text class="header-value">长江水利委员会水文局长江口水文水文水文水文水文水文</text>
       </view>
     </view>
-    <up-tabs :list="tabList" :lineWidth="80" :lineHeight="2" :activeStyle="{
-      color: '#1677ff'
-    }" class="tabs-list" v-model:current="tabIndex"></up-tabs>
+    <custom-tabs :tabs="tabList" class="tabs-list" v-model="tabIndex"></custom-tabs>
     <scroll-view :scroll-y="true" class="personal-detail-content">
       <template v-if="tabIndex === 0">
         <view v-for="item in detailList" :key="item.id" class="detail-item">
@@ -69,13 +67,14 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
 import { onLoad } from '@dcloudio/uni-app'
+import CustomTabs from '@/components/custom-tabs/index.vue';
 
 const tabIndex = ref(0);
 const detailId = ref('');
 const isCollect = ref(false);
 const tabList = reactive([
-  { name: '个人资质信息' },
-  { name: '个人工程业绩' },
+  { label: '个人资质信息', value: '0' },
+  { label: '个人工程业绩', value: '1' },
 ]);
 const detailList = reactive([
   {

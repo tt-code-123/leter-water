@@ -7,10 +7,9 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
 interface RequestConfig {
   url: string
-  baseURL?:string
+  baseURL?: string
   method?: HttpMethod
   data?: any
-  params?: Record<string, any>
   header?: Record<string, string>
   timeout?: number
 }
@@ -36,14 +35,38 @@ const defaultConfig = {
   }
 }
 
-// 请求队列
+// 自定义参数序列化方法（兼容小程序环境）
+const serializeParams = (params: Record<string, any>): string => {
+  const parts: string[] = []
+  
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === null || typeof value === 'undefined') return
+    
+    if (Array.isArray(value)) {
+      value.forEach(item => {
+        parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(item)}`)
+      })
+    } else {
+      parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    }
+  })
+  
+  return parts.join('&')
+}
+
+
 const requestQueue = new Set<string>()
 
-// 创建请求实例
 const createRequest = () => {
-  // 请求拦截器
+  // 处理GET请求参数（拼接URL）
+  const processGetParams = (url: string, data: any) => {
+    if (!data || Object.keys(data).length === 0) return url
+    
+    const params = serializeParams(data)
+    return url.includes('?') ? `${url}&${params}` : `${url}?${params}`
+  }
+
   const requestInterceptor = (config: RequestConfig) => {
-    // 添加全局请求头，例如token
     const token = uni.getStorageSync('token')
     if (token) {
       config.header = {
@@ -51,29 +74,32 @@ const createRequest = () => {
         Authorization: `Bearer ${token}`
       }
     }
+    
+    // GET请求特殊处理
+    if (config.method === 'GET' && config.data) {
+      config.url = processGetParams(config.url, config.data)
+    }
+    
     return config
   }
 
-  // 响应拦截器
   const responseInterceptor = (response: any) => {
     const { statusCode, data } = response
     if (statusCode === 200) {
-      return data
+      return data?.data || data
     }
     return Promise.reject(response)
   }
 
-  // 错误处理
   const errorHandler = (error: any) => {
     console.error('Request Error:', error)
     return Promise.reject(error)
   }
 
-  // 核心请求方法
   const request = async <T = any>(
     config: RequestConfig,
     options: RequestOptions = {}
-  ): Promise<ResponseData<T>> => {
+  ): Promise<T> => {
     const mergedConfig = {
       ...defaultConfig,
       ...config,
@@ -84,49 +110,43 @@ const createRequest = () => {
     }
 
     try {
-      // 请求拦截
       const processedConfig = requestInterceptor(mergedConfig)
       
-      // 显示加载状态
       if (options.isShowLoading) {
         uni.showLoading({ title: '加载中...', mask: true })
       }
 
-      // 生成请求唯一标识
       const requestKey = `${config.method}_${config.url}`
       requestQueue.add(requestKey)
+
+      // 清除GET请求的data（参数已拼接到URL）
+      const requestData = config.method === 'GET' ? undefined : processedConfig.data
 
       const response = await uni.request({
         url: processedConfig.baseURL + processedConfig.url,
         method: processedConfig.method,
-        data: processedConfig.data,
+        data: requestData,
         header: processedConfig.header,
         timeout: processedConfig.timeout
       })
 
-      // 响应拦截
       const data = await responseInterceptor(response)
-
-      return data as ResponseData<T>
+      return data as T
     } catch (error) {
-      // 错误处理
       if (options.isHandleError) {
         handleBusinessError(error)
       }
       return errorHandler(error)
     } finally {
-      // 清理请求队列
       const requestKey = `${config.method}_${config.url}`
       requestQueue.delete(requestKey)
       
-      // 隐藏加载状态
       if (options.isShowLoading) {
         uni.hideLoading()
       }
     }
   }
 
-  // 业务错误处理
   const handleBusinessError = (error: any) => {
     const errMsg = error?.data?.message || '请求失败，请稍后重试'
     uni.showToast({
@@ -138,9 +158,17 @@ const createRequest = () => {
 
   return {
     request,
-    get: <T = any>(url: string, params?: Record<string, any>, config?: Omit<RequestConfig, 'url' | 'method' | 'data'>) =>
-      request<T>({ ...config, url, method: 'GET', params }),
-      
+    get: <T = any>(
+      url: string, 
+      params?: Record<string, any>, 
+      config?: Omit<RequestConfig, 'url' | 'method' | 'data'>
+    ) => request<T>({ 
+      ...config, 
+      url, 
+      method: 'GET',
+      data: params // 将params赋值给data
+    }),
+    
     post: <T = any>(url: string, data?: any, config?: Omit<RequestConfig, 'url' | 'method' | 'data'>) =>
       request<T>({ ...config, url, method: 'POST', data })
   }

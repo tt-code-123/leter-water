@@ -3,11 +3,11 @@
     <search-box placeholder="请输入关键字" @search="handleSearch"></search-box>
     <scroll-list :styles="{
       height: containerHeight,
-    }" :containerHeight="containerHeight" :params="{
-      keywords: searchKeyword
-    }" :request="fetchData" @fetchEnd="handleFetchEnd">
+    }" :params="{
+      qiyeName: searchKeyword
+    }" :request="fetchData" @request-end="handleFetchEnd">
       <template #item="{ item, index }">
-        <common-list-item :title="item.title" :itemIndex="index" :itemOptions="[
+        <common-list-item :title="item.qiyeName" :itemIndex="index" :itemOptions="[
           {
             label: '统一社会信用代码',
             value: item.enterpriseCreditCode
@@ -38,6 +38,7 @@ import { getHomeList } from '@/api/company'
 const searchKeyword = ref('')
 
 function handleSearch(searchText: string) {
+  if (!searchText && !searchKeyword.value) return
   uni.showLoading({
     title: '数据查询中...',
     mask: true
@@ -55,10 +56,10 @@ async function fetchData(params: any) {
   })
 
   return {
-    content: res.data.list,
+    content: res.list,
     page: {
-      size: 10,
-      total: res.data.total
+      size: res.pageSize,
+      total: res.total
     }
   }
 }

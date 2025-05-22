@@ -1,8 +1,6 @@
 <template>
   <view class="collection">
-    <up-tabs :list="tabList" :lineHeight="2" :activeStyle="{
-      color: '#1677ff'
-    }" class="tabs-list" v-model:current="tabIndex"></up-tabs>
+    <custom-tabs :tabs="tabList" class="tabs-list" v-model="tabIndex"></custom-tabs>
     <scroll-list class="collection-list" emptyDescription="暂无收藏数据" :styles="{
       height: '100%',
       backgroundColor: '#fff'
@@ -15,11 +13,12 @@
 import { reactive, ref } from 'vue';
 
 import ScrollList from '@/components/scroll-list/index.vue'
+import CustomTabs from '@/components/custom-tabs/index.vue';
 
 const tabIndex = ref(0);
 const tabList = reactive([
-  { name: '从业单位' },
-  { name: '从业人员' },
+  { label: '从业单位', value: '0' },
+  { label: '从业人员', value: '1' },
 ]);
 
 function fetchData() {

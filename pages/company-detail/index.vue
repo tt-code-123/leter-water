@@ -1,6 +1,6 @@
 <template>
   <view class="company-detail">
-    <view class="company-detail-header">
+    <view class="company-detail-header"> 
       <view class="flex-between">
         <text class="header-name">长沙核工业工程勘察院有限公司</text>
         <up-icon :name="isCollect ? 'star-fill' : 'star'" :color="isCollect ? '#fadb14' : '#999'" size="24"
@@ -60,14 +60,12 @@
         </view>
       </view>
     </view>
-    <up-tabs :list="tabList" :lineHeight="2" :activeStyle="{
-      color: '#1677ff'
-    }" class="tabs-list" v-model:current="tabIndex"></up-tabs>
+    <custom-tabs :tabs="tabList" class="tabs-list" v-model="tabIndex"></custom-tabs>
     <template v-if="tabIndex === 0">
       <enterprise-qualifications v-if="tabIndex === 0" class="common-comp-container"></enterprise-qualifications>
     </template>
     <template v-else-if="tabIndex === 1">
-      <registered-personnel class="common-comp-container"></registered-personnel>
+      <registered-personnel :qiyeId="detailId" class="common-comp-container"></registered-personnel>
     </template>
     <template v-else-if="tabIndex === 2">
       <engineering-project class="common-comp-container"></engineering-project>
@@ -101,21 +99,21 @@ import BadBehavior from './components/bad-behavior/index.vue'
 import BlacklistRecord from './components/blacklist-record/index.vue'
 import ListFocuses from './components/list-focuses/index.vue'
 import ChangeRecord from './components/change-record/index.vue'
+import CustomTabs from '@/components/custom-tabs/index.vue';
 
 const detailId = ref('');
 const isCollect = ref(false);
 const tabIndex = ref(0);
 const tabList = reactive([
-  { name: '企业资质资格' },
-  { name: '注册人员' },
-  { name: '工程项目' },
-  { name: '良好行为' },
-  { name: '不良行为' },
-  { name: '重点关注名单' },
-  { name: '黑名单记录' },
-  { name: '变更记录' },
+  { value: '0', label: '企业资质资格' },
+  { value: '1', label: '注册人员' },
+  { value: '2', label: '工程项目' },
+  { value: '3', label: '良好行为' },
+  { value: '4', label: '不良行为' },
+  { value: '5', label: '重点关注名单' },
+  { value: '6', label: '黑名单记录' },
+  { value: '7', label: '变更记录' },
 ]);
-
 
 onLoad((options) => {
   detailId.value = options!.id;

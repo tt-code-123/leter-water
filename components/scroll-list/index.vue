@@ -3,7 +3,8 @@
     :style="scrollStyle" :class="['scroll-list-wrap', className]">
 
     <!-- 空状态 -->
-    <up-empty v-if="!loading && !list.length" mode="data" :text="emptyDescription" style="height: 100%;">
+    <up-empty v-if="!loading && !list.length" mode="data" :text="emptyDescription"
+      style="height: 100%;box-sizing: border-box;">
       <template v-if="emptyIcon">
         <slot name="empty-icon" />
       </template>
@@ -34,7 +35,8 @@ import {
   useAttrs,
   onMounted,
   nextTick,
-  CSSProperties
+  CSSProperties,
+  watch
 } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 
@@ -59,7 +61,8 @@ const props = withDefaults(defineProps<{
   className?: string
   lowerThreshold?: number
   styles?: CSSProperties
-  request: (page: { index: number; size: number }) => Promise<PageData<any>>
+  params?: Record<string, any>
+  request: (page: { pageNo: number; pageSize: number } & Record<string, any>) => Promise<PageData<any>>
 }>(), {
   isScroll: true,
   defaultSize: 10,
@@ -68,7 +71,8 @@ const props = withDefaults(defineProps<{
   isEffectFetch: false,
   isShowFetch: true,
   emptyDescription: '暂无数据',
-  styles: {} as any
+  styles: {} as any,
+  params: () => ({})
 })
 
 const emits = defineEmits(['request-end'])
@@ -82,6 +86,17 @@ const page = reactive({
   size: props.defaultSize
 })
 const pageTotal = ref(0)
+
+// 添加params监听
+watch(
+  () => props.params,
+  (newVal, oldVal) => {
+    if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+      reload()
+    }
+  },
+  { deep: true }
+)
 
 // 计算属性
 const scrollStyle = computed(() => ({
@@ -138,8 +153,9 @@ const refetchData = async (params?: {
 
   try {
     const res = await props.request({
-      index: fetchIndex || (reset ? 1 : page.index),
-      size: fetchSize || page.size
+      pageNo: fetchIndex || (reset ? 1 : page.index),
+      pageSize: fetchSize || page.size,
+      ...props.params
     })
 
     const content = res.content

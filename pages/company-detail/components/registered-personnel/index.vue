@@ -6,29 +6,33 @@
         {{ item }}
       </view>
     </view>
-    <scroll-view class="scroll-view" :scroll-y="true">
-      <view v-for="(item, index) in detailList" :key="item.id" class="detail-item">
-        <view class="desc-container">{{ index + 1 }}、刘文云</view>
-        <up-table>
-          <up-tr>
-            <up-td>项目编码</up-td>
-            <up-td class="empty">空</up-td>
-          </up-tr>
-          <up-tr>
-            <up-td>项目属地</up-td>
-            <up-td>福建/南平/三明</up-td>
-          </up-tr>
-          <up-tr>
-            <up-td>建设单位</up-td>
-            <up-td>明溪县盖洋镇人民政府</up-td>
-          </up-tr>
-          <up-tr>
-            <up-td>总投资(万元)</up-td>
-            <up-td>200.1979</up-td>
-          </up-tr>
-        </up-table>
-      </view>
-    </scroll-view>
+    <scroll-list :styles="{
+      height: '100%',
+    }" class="scroll-view" :request="fetchData">
+      <template #item="{ item, index }">
+        <view class="detail-item">
+          <view class="desc-container">{{ index + 1 }}、{{ item.perName }}</view>
+          <up-table>
+            <up-tr>
+              <up-td>身份证</up-td>
+              <up-td :class="{ empty: !item.idCardNo }">{{ item.idCardNo || '空' }}</up-td>
+            </up-tr>
+            <up-tr>
+              <up-td>注册类别</up-td>
+              <up-td :class="{ empty: !item.idCardNo }">福建/南平/三明</up-td>
+            </up-tr>
+            <up-tr>
+              <up-td>注册号(执行印章号)</up-td>
+              <up-td :class="{ empty: !item.idCardNo }">明溪县盖洋镇人民政府</up-td>
+            </up-tr>
+            <up-tr>
+              <up-td>注册专业</up-td>
+              <up-td :class="{ empty: !item.idCardNo }">shui</up-td>
+            </up-tr>
+          </up-table>
+        </view>
+      </template>
+    </scroll-list>
   </view>
 </template>
 <script lang="ts">
@@ -38,6 +42,15 @@ export default {
 </script>
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
+import { getListByQiyeryId } from '@/api/company'
+import ScrollList from '@/components/scroll-list/index.vue'
+
+const props = defineProps({
+  qiyeId: {
+    type: String,
+    required: true
+  }
+})
 
 const tabList = reactive([
   '全部',
@@ -48,20 +61,24 @@ const tabList = reactive([
   '注册土木工程师',
   '其他'
 ])
-const detailList = reactive([
-  {
-    id: 1,
-  },
-  {
-    id: 2,
-  },
-  {
-    id: 3,
-  }
-])
 const currentTab = ref(0)
 
-const handleTabClick = (index: number) => {
+async function fetchData(params: any) {
+  const res = await getListByQiyeryId({
+    ...params,
+    qiyeId: props.qiyeId
+  })
+
+  return {
+    content: res.list,
+    page: {
+      size: res.pageSize,
+      total: res.total
+    }
+  }
+}
+
+function handleTabClick(index: number) {
   currentTab.value = index
 }
 </script>
@@ -105,6 +122,10 @@ const handleTabClick = (index: number) => {
   flex: 1;
   height: 0;
   box-sizing: border-box;
+}
+
+.empty {
+  color: #fff;
 }
 
 .detail-item {
