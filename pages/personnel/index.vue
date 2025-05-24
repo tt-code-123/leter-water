@@ -2,21 +2,21 @@
   <view>
     <search-box placeholder="请输入关键字" @search="handleSearch"></search-box>
     <scroll-list :styles="{ height: containerHeight }" :params="{
-      keywords: searchKeyword
-    }" :request="fetchData">
+      name: searchKeyword
+    }" :request="fetchData" @request-end="handleFetchEnd">
       <template #item="{ item, index }">
-        <common-list-item :title="item.title" :itemIndex="index" :itemOptions="[
+        <common-list-item :title="item.perName" :itemIndex="index" :itemOptions="[
           {
-            label: '身份证号',
-            value: item.code
+            label: '联系电话',
+            value: item.phone
           },
           {
-            label: '证书专业',
-            value: item.Professional
+            label: '所属企业',
+            value: item.qiyeName
           },
           {
-            label: '注册号(执行印号)',
-            value: item.registrationNumber
+            label: '人员类型',
+            value: item.pertype
           },
         ]" @click="handleClickItem(item.id)"></common-list-item>
       </template>
@@ -31,10 +31,12 @@ import SearchBox from '@/components/search-box/index.vue'
 import ScrollList from '@/components/scroll-list/index.vue'
 import CommonListItem from '@/components/common-list-item/index.vue'
 import { rpxToPx, getWindowHeight } from '@/utils'
+import { getListByQiyeryId } from '@/api/personnel'
 
 const searchKeyword = ref('')
 
 function handleSearch(searchText: string) {
+  if (!searchText && !searchKeyword.value) return
   uni.showLoading({
     title: '数据查询中...',
     mask: true
@@ -42,42 +44,17 @@ function handleSearch(searchText: string) {
   searchKeyword.value = searchText
 }
 
-function fetchData() {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(true)
-    }, 2000)
-  }).then(() => {
-    return {
-      content: [
-        {
-          id: 1,
-          title: '张三',
-          code: '156456456132132',
-          Professional: '量测',
-          registrationNumber: 'JCY1321321'
-        },
-        {
-          id: 2,
-          title: '李四',
-          code: '5132132132',
-          Professional: '量测',
-          registrationNumber: 'JCY1321321'
-        },
-        {
-          id: 3,
-          title: '王五',
-          code: '121324564564',
-          Professional: '量测',
-          registrationNumber: 'JCY1321321'
-        }
-      ],
-      page: {
-        size: 3,
-        total: 3
-      }
-    }
+async function fetchData(params: any) {
+  const res = await getListByQiyeryId({
+    ...params,
   })
+  return {
+    content: res.list,
+    page: {
+      size: res.pageSize,
+      total: res.total
+    }
+  }
 }
 
 function handleFetchEnd() {

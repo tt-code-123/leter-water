@@ -13,11 +13,11 @@
             value: item.enterpriseCreditCode
           },
           {
-            label: '企业法人代表',
+            label: '法人',
             value: item.frdbName
           },
           {
-            label: '企业注册属地',
+            label: '企业地址',
             value: item.zcAddress
           },
         ]" @click="handleClickItem(item.id)"></common-list-item>
@@ -52,7 +52,6 @@ function handleFetchEnd() {
 async function fetchData(params: any) {
   const res = await getHomeList({
     ...params,
-    year: '2025'
   })
 
   return {

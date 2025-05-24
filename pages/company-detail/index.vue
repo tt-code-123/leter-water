@@ -1,36 +1,36 @@
 <template>
   <view class="company-detail">
-    <view class="company-detail-header"> 
+    <view class="company-detail-header">
       <view class="flex-between">
-        <text class="header-name">长沙核工业工程勘察院有限公司</text>
-        <up-icon :name="isCollect ? 'star-fill' : 'star'" :color="isCollect ? '#fadb14' : '#999'" size="24"
-          @click="handleClickStar"></up-icon>
+        <text class="header-name">{{ qiyeInfo.qiyeName }}</text>
+        <up-icon
+          :name="isCollect ? 'star-fill' : 'star'"
+          :color="isCollect ? '#fadb14' : '#999'"
+          size="24"
+          @click="handleClickStar"
+        ></up-icon>
       </view>
       <view class="address">
         <up-icon name="map-fill" color="#1677FF" size="16"></up-icon>
-        <text class="header-address">宁乡</text>
+        <text class="header-address">{{ qiyeInfo.zcAddress }}</text>
       </view>
       <view class="flex-between">
         <text class="header-title">统一社会信用代码</text>
-        <text class="header-value">145215486544</text>
+        <text class="header-value">{{ qiyeInfo.enterpriseCreditCode }}</text>
       </view>
       <view class="flex-between">
         <text class="header-title">企业法人代表</text>
-        <text class="header-value">张三</text>
+        <text class="header-value">{{ qiyeFrInfo.frdbName }}</text>
       </view>
       <view class="flex-between">
-        <text class="header-title">企业等级注册类型</text>
-        <text class="header-value">啊啊</text>
+        <text class="header-title">登记注册类型</text>
+        <text class="header-value">内资企业</text>
       </view>
       <view class="flex-between">
         <text class="header-title">企业注册属地</text>
-        <text class="header-value">宁乡</text>
+        <text class="header-value">{{ qiyeInfo.zcAddress }}</text>
       </view>
-      <view class="flex-between">
-        <text class="header-title">企业经营地址</text>
-        <text class="header-value">长沙市雨花区想听蓝天</text>
-      </view>
-      <view class="chart-container">
+      <!-- <view class="chart-container">
         <view class="chart-item">
           <view class="icon-container">
             <up-icon name="account-fill" size="24" color="#1677FF"></up-icon>
@@ -58,75 +58,84 @@
             <text><text class="highlight">8</text>项</text>
           </view>
         </view>
-      </view>
+      </view> -->
     </view>
-    <custom-tabs :tabs="tabList" class="tabs-list" v-model="tabIndex"></custom-tabs>
+    <custom-tabs
+      :tabs="tabList"
+      class="tabs-list"
+      v-model="tabIndex"
+    ></custom-tabs>
     <template v-if="tabIndex === 0">
-      <enterprise-qualifications v-if="tabIndex === 0" class="common-comp-container"></enterprise-qualifications>
+      <base-info
+        v-if="tabIndex === 0"
+        class="common-comp-container"
+        :baseInfo="qiyeInfo"
+      ></base-info>
     </template>
     <template v-else-if="tabIndex === 1">
-      <registered-personnel :qiyeId="detailId" class="common-comp-container"></registered-personnel>
+      <legal-person-info
+        :legalPersonInfo="qiyeFrInfo"
+        class="common-comp-container"
+      ></legal-person-info>
     </template>
     <template v-else-if="tabIndex === 2">
-      <engineering-project class="common-comp-container"></engineering-project>
+      <enterprise-qualifications
+        class="common-comp-container"
+      ></enterprise-qualifications>
     </template>
     <template v-else-if="tabIndex === 3">
-      <good-conduct class="common-comp-container"></good-conduct>
-    </template>
-    <template v-else-if="tabIndex === 4">
-      <bad-behavior class="common-comp-container"></bad-behavior>
-    </template>
-    <template v-else-if="tabIndex === 5">
-      <list-focuses class="common-comp-container"></list-focuses>
-    </template>
-    <template v-else-if="tabIndex === 6">
-      <blacklist-record class="common-comp-container"></blacklist-record>
-    </template>
-    <template v-else-if="tabIndex === 7">
-      <change-record class="common-comp-container"></change-record>
+      <enterprise-qualifications
+        class="common-comp-container"
+      ></enterprise-qualifications>
     </template>
   </view>
 </template>
 <script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app'
-import { ref, reactive } from 'vue';
+import { onLoad } from "@dcloudio/uni-app";
+import { ref, reactive } from "vue";
 
-import EnterpriseQualifications from './components/enterprise-qualifications/index.vue'
-import EngineeringProject from './components/engineering-project/index.vue'
-import RegisteredPersonnel from './components/registered-personnel/index.vue'
-import GoodConduct from './components/good-conduct/index.vue'
-import BadBehavior from './components/bad-behavior/index.vue'
-import BlacklistRecord from './components/blacklist-record/index.vue'
-import ListFocuses from './components/list-focuses/index.vue'
-import ChangeRecord from './components/change-record/index.vue'
-import CustomTabs from '@/components/custom-tabs/index.vue';
+import BaseInfo from "./components/base-info/index.vue";
+import LegalPersonInfo from "./components/legal-person-info/index.vue";
+import EnterpriseQualifications from "./components/enterprise-qualifications/index.vue";
+import EngineeringProject from "./components/engineering-project/index.vue";
+import RegisteredPersonnel from "./components/registered-personnel/index.vue";
+import GoodConduct from "./components/good-conduct/index.vue";
+import BadBehavior from "./components/bad-behavior/index.vue";
+import BlacklistRecord from "./components/blacklist-record/index.vue";
+import ListFocuses from "./components/list-focuses/index.vue";
+import ChangeRecord from "./components/change-record/index.vue";
+import CustomTabs from "@/components/custom-tabs/index.vue";
+import { getQiyeFr, getQiyeInfo, QiYeInfoPayload } from "@/api/company";
 
-const detailId = ref('');
+const qiyeInfo = ref<Partial<QiYeInfoPayload>>({});
+const qiyeFrInfo = ref<any>({});
+const detailId = ref("");
 const isCollect = ref(false);
 const tabIndex = ref(0);
 const tabList = reactive([
-  { value: '0', label: '企业资质资格' },
-  { value: '1', label: '注册人员' },
-  { value: '2', label: '工程项目' },
-  { value: '3', label: '良好行为' },
-  { value: '4', label: '不良行为' },
-  { value: '5', label: '重点关注名单' },
-  { value: '6', label: '黑名单记录' },
-  { value: '7', label: '变更记录' },
+  { value: "0", label: "基础信息" },
+  { value: "1", label: "企业法人代表信息" },
+  { value: "2", label: "企业资质信息" },
+  { value: "3", label: "人员基本信息" },
 ]);
 
 onLoad((options) => {
   detailId.value = options!.id;
-})
+  getQiyeInfo(options!.id).then((res) => {
+    qiyeInfo.value = res;
+  });
+  getQiyeFr(options!.id).then((res) => {
+    qiyeFrInfo.value = res;
+  });
+});
 
 function handleClickStar() {
   uni.showToast({
-    title: !isCollect.value ? '收藏成功' : '取消收藏成功',
-    duration: 1000
-  })
+    title: !isCollect.value ? "收藏成功" : "取消收藏成功",
+    duration: 1000,
+  });
   isCollect.value = !isCollect.value;
 }
-
 </script>
 <style lang="scss" scoped>
 .company-detail {
