@@ -84,9 +84,10 @@
       ></enterprise-qualifications>
     </template>
     <template v-else-if="tabIndex === 3">
-      <enterprise-qualifications
+      <basic-information-personnel
         class="common-comp-container"
-      ></enterprise-qualifications>
+        :qiyeId="qiyeInfo.id"
+      ></basic-information-personnel>
     </template>
   </view>
 </template>
@@ -97,14 +98,8 @@ import { ref, reactive } from "vue";
 import BaseInfo from "./components/base-info/index.vue";
 import LegalPersonInfo from "./components/legal-person-info/index.vue";
 import EnterpriseQualifications from "./components/enterprise-qualifications/index.vue";
-import EngineeringProject from "./components/engineering-project/index.vue";
-import RegisteredPersonnel from "./components/registered-personnel/index.vue";
-import GoodConduct from "./components/good-conduct/index.vue";
-import BadBehavior from "./components/bad-behavior/index.vue";
-import BlacklistRecord from "./components/blacklist-record/index.vue";
-import ListFocuses from "./components/list-focuses/index.vue";
-import ChangeRecord from "./components/change-record/index.vue";
 import CustomTabs from "@/components/custom-tabs/index.vue";
+import BasicInformationPersonnel from "./components/basic-information-personnel/index.vue";
 import { getQiyeFr, getQiyeInfo, QiYeInfoPayload } from "@/api/company";
 
 const qiyeInfo = ref<Partial<QiYeInfoPayload>>({});

@@ -42,7 +42,7 @@
 		{
 			"path": "pages/notice/index",
 			"style": {
-				"navigationBarTitleText": "公示"
+				"navigationBarTitleText": "招标信息"
 			}
 		},
 		{

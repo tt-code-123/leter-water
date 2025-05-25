@@ -1,73 +1,46 @@
 <template>
   <scroll-view class="legal-person-info" :scroll-y="true">
     <up-table>
-      <up-tr>
-        <up-td width="40%">法人代表名称</up-td>
-        <up-td>
-          <text
-            :class="{
-              empty: !legalPersonInfo.frdbName,
-            }"
-            >{{ legalPersonInfo.frdbName || "空" }}</text
-          ></up-td
-        >
-      </up-tr>
-      <up-tr>
-        <up-td width="40%">身份证号</up-td>
-        <up-td
-          ><text :class="{ empty: !legalPersonInfo.idCard }">{{
-            legalPersonInfo.idCard || "空"
-          }}</text></up-td
-        >
-      </up-tr>
-      <up-tr>
-        <up-td width="40%">性别</up-td>
-        <up-td
-          ><text :class="{ empty: !legalPersonInfo.sex }">{{
-            legalPersonInfo.sex || "空"
-          }}</text></up-td
-        >
-      </up-tr>
-      <up-tr>
-        <up-td width="40%">职称</up-td>
-        <up-td>
-          <text :class="{ empty: !legalPersonInfo.zhic }">{{
-            legalPersonInfo.zhic || "空"
-          }}</text>
-        </up-td>
-      </up-tr>
-      <up-tr>
-        <up-td width="40%">职务</up-td>
-        <up-td
-          ><text :class="{ empty: !legalPersonInfo.zhiw }">{{
-            legalPersonInfo.zhiw || "空"
-          }}</text></up-td
-        >
-      </up-tr>
-      <up-tr>
-        <up-td width="40%">学历</up-td>
-        <up-td
-          ><text :class="{ empty: !legalPersonInfo.xuel }">
-            {{ legalPersonInfo.xuel || "空" }}
-          </text></up-td
-        >
-      </up-tr>
-      <up-tr>
-        <up-td width="40%">从事本行业起始年份</up-td>
-        <up-td
-          ><text :class="{ empty: !legalPersonInfo.benhyStartDate }">{{
-            legalPersonInfo.benhyStartDate || "空"
-          }}</text></up-td
-        >
-      </up-tr>
-      <up-tr>
-        <up-td width="40%">联系电话</up-td>
-        <up-td
-          ><text :class="{ empty: !legalPersonInfo.phone }">{{
-            legalPersonInfo.phone || "空"
-          }}</text></up-td
-        >
-      </up-tr>
+      <custom-tr
+        keyTdWidth="40%"
+        label="法人代表名称"
+        :value="legalPersonInfo.frdbName"
+      ></custom-tr>
+      <custom-tr
+        keyTdWidth="40%"
+        label="身份证号"
+        :value="legalPersonInfo.idCard"
+      ></custom-tr>
+      <custom-tr
+        keyTdWidth="40%"
+        label="性别"
+        :value="legalPersonInfo.sex"
+      ></custom-tr>
+      <custom-tr
+        keyTdWidth="40%"
+        label="职称"
+        :value="legalPersonInfo.zhic"
+      ></custom-tr>
+      <custom-tr
+        keyTdWidth="40%"
+        label="职务"
+        :value="legalPersonInfo.zhiw"
+      ></custom-tr>
+      <custom-tr
+        keyTdWidth="40%"
+        label="学历"
+        :value="legalPersonInfo.xuel"
+      ></custom-tr>
+      <custom-tr
+        keyTdWidth="40%"
+        label="从事本行业起始年份"
+        :value="legalPersonInfo.benhyStartDate"
+      ></custom-tr>
+      <custom-tr
+        keyTdWidth="40%"
+        label="联系电话"
+        :value="legalPersonInfo.phone"
+      ></custom-tr>
     </up-table>
   </scroll-view>
 </template>
@@ -77,6 +50,7 @@ export default {
 };
 </script>
 <script setup lang="ts">
+import CustomTr from "@/components/custom-table/custom-tr.vue";
 const props = defineProps({
   legalPersonInfo: {
     type: Object,
@@ -87,12 +61,8 @@ const props = defineProps({
 <style lang="scss" scoped>
 .legal-person-info {
   box-sizing: border-box;
-  background-color: #fff;
+  background-color: #f0f0f0;
   height: 100%;
   padding: 24rpx;
-}
-
-.empty {
-  color: #fff;
 }
 </style>
