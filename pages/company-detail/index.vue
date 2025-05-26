@@ -24,7 +24,9 @@
       </view>
       <view class="flex-between">
         <text class="header-title">登记注册类型</text>
-        <text class="header-value">内资企业</text>
+        <text class="header-value">{{
+          RegistrationTypeMap1[qiyeInfo.djzcType1!]
+        }}</text>
       </view>
       <view class="flex-between">
         <text class="header-title">企业注册属地</text>
@@ -86,7 +88,7 @@
     <template v-else-if="tabIndex === 3">
       <basic-information-personnel
         class="common-comp-container"
-        :qiyeId="qiyeInfo.id"
+        :qiyeId="qiyeInfo.id!"
       ></basic-information-personnel>
     </template>
   </view>
@@ -101,6 +103,7 @@ import EnterpriseQualifications from "./components/enterprise-qualifications/ind
 import CustomTabs from "@/components/custom-tabs/index.vue";
 import BasicInformationPersonnel from "./components/basic-information-personnel/index.vue";
 import { getQiyeFr, getQiyeInfo, QiYeInfoPayload } from "@/api/company";
+import { RegistrationTypeMap1 } from "@/types/index";
 
 const qiyeInfo = ref<Partial<QiYeInfoPayload>>({});
 const qiyeFrInfo = ref<any>({});

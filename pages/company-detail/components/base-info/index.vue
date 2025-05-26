@@ -59,12 +59,12 @@
       <custom-tr
         keyTdWidth="35%"
         label="登记注册类型"
-        :value="baseInfo.djzcType1"
+        :value="RegistrationTypeMap1[baseInfo.djzcType1]"
       ></custom-tr>
       <custom-tr
         keyTdWidth="35%"
         label="登记注册类型"
-        :value="baseInfo.djzcType2"
+        :value="RegistrationTypeMap2[baseInfo.djzcType2]"
       ></custom-tr>
       <custom-tr
         keyTdWidth="35%"
@@ -116,6 +116,7 @@ export default {
 </script>
 <script setup lang="ts">
 import CustomTr from "@/components/custom-table/custom-tr.vue";
+import { RegistrationTypeMap1, RegistrationTypeMap2 } from "@/types/index";
 
 const props = defineProps({
   baseInfo: {
