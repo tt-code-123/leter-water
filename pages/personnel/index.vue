@@ -27,7 +27,7 @@
               value: item.pertype,
             },
           ]"
-          @click="handleClickItem(item.id)"
+          @click="handleClickItem(item.id,item.relQiyeId)"
         ></common-list-item>
       </template>
     </scroll-list>
@@ -71,9 +71,9 @@ function handleFetchEnd() {
   uni.hideLoading();
 }
 
-function handleClickItem(id: number) {
+function handleClickItem(id: string,qiyeId:string) {
   uni.navigateTo({
-    url: `/pages/personnel-detail/index?id=${id}`,
+    url: `/pages/personnel-detail/index?id=${id}&qiyeId=${qiyeId}`,
   });
 }
 

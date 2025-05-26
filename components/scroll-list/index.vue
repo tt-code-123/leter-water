@@ -1,19 +1,9 @@
 <template>
-  <scroll-view
-    scroll-y
-    :show-scrollbar="false"
-    :lower-threshold="lowerThreshold"
-    @scrolltolower="handleScrollToLower"
-    :style="scrollStyle"
-    :class="['scroll-list-wrap', className]"
-  >
+  <scroll-view scroll-y :show-scrollbar="false" :lower-threshold="lowerThreshold" @scrolltolower="handleScrollToLower"
+    :style="scrollStyle" :class="['scroll-list-wrap', className]">
     <!-- 空状态 -->
-    <up-empty
-      v-if="!loading && !list.length"
-      mode="data"
-      :text="emptyDescription"
-      style="height: 100%; box-sizing: border-box"
-    >
+    <up-empty v-if="!loading && !list.length" mode="data" :text="emptyDescription"
+      style="height: 100%; box-sizing: border-box">
       <template v-if="emptyIcon">
         <slot name="empty-icon" />
       </template>
@@ -21,11 +11,10 @@
     </up-empty>
 
     <!-- 加载中状态 -->
-    <up-loading-page
-      v-if="loading && !list.length"
-      :loading-text="loadingText"
-      icon-size="40"
-    />
+    <view v-if="loading && !list.length"
+      style="height: 100%;display: flex; align-items: center; justify-content: center;">
+      <up-loading-icon :text="loadingText" :textColor="loadingTextColor" :vertical="true"></up-loading-icon>
+    </view>
 
     <!-- 列表内容 -->
     <view v-for="(item, index) in list" :key="index" :style="itemStyle">
@@ -34,11 +23,7 @@
 
     <!-- 底部加载状态 -->
     <view class="loading-footer">
-      <up-loadmore
-        v-if="list.length"
-        :status="loadStatus"
-        :load-text="loadText"
-      />
+      <up-loadmore v-if="list.length" :status="loadStatus" :load-text="loadText" />
       <slot v-if="$slots.extra && list.length" name="extra" />
     </view>
   </scroll-view>
@@ -80,6 +65,7 @@ const props = withDefaults(
     lowerThreshold?: number;
     styles?: CSSProperties;
     params?: Record<string, any>;
+    loadingTextColor?: string
     request: (
       page: { pageNo: number; pageSize: number } & Record<string, any>
     ) => Promise<PageData<any>>;
@@ -92,6 +78,8 @@ const props = withDefaults(
     isEffectFetch: false,
     isShowFetch: true,
     emptyDescription: "暂无数据",
+    loadingText: '正在加载...',
+    loadingTextColor: '#666',
     styles: {} as any,
     params: () => ({}),
   }
