@@ -65,7 +65,7 @@ export function pxToRpx(px: number) {
 
 /**
  * 返回底部安全距离
- * @param {*} showTabBar
+ * @param {*}
  */
 export function getSafeBottom() {
   const systemInfo = uni.getSystemInfoSync();

@@ -32,7 +32,8 @@
       <personnel-base-info :base-info="personInfo"></personnel-base-info>
     </template>
     <template v-else>
-      <personnel-qualifications :qiyeId="qiyeId"></personnel-qualifications>
+      <personnel-qualifications :qiyeId="qiyeId"
+        :xaQiyeryRgZhiCList="personInfo.xaQiyeryRgZhiCList || []"></personnel-qualifications>
     </template>
   </view>
 </template>

@@ -52,13 +52,14 @@ export default {
 }
 </script>
 <script lang="ts" setup>
-import { getBiddingPageList } from '@/api/notice';
+import { getTenderPageList } from '@/api/notice';
 import ScrollList from '@/components/scroll-list/index.vue';
 import CommonListItem from '@/components/common-list-item/index.vue';
 
 async function fetchData(params: any) {
-  const res = await getBiddingPageList({
+  const res = await getTenderPageList({
     ...params,
+    cGglx: '2'
   })
   return {
     content: res.list,

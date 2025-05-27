@@ -42,7 +42,13 @@
 		{
 			"path": "pages/notice/index",
 			"style": {
-				"navigationBarTitleText": "招标信息"
+				"navigationBarTitleText": "招投标信息"
+			}
+		},
+		{
+			"path": "pages/notice-detail/index",
+			"style": {
+				"navigationBarTitleText": "招投标信息详情"
 			}
 		},
 		{

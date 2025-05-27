@@ -1,48 +1,12 @@
 <template>
   <scroll-list class="bidding-list" :isEffectFetch="true" :isShowFetch="false" :request="fetchData">
     <template #item="{ item, index }">
-      <common-list-item :title="item.title" :itemIndex="index" :itemOptions="[
+      <common-list-item :title="item.cgsbt" :itemIndex="index" :itemOptions="[
         {
-          label: '招标项目名称',
-          value: item.publishTime,
+          label: '中标日期',
+          value: item.dGsfbsj,
         },
-        {
-          label: '项目编号',
-          value: item.cxgbdbBh,
-        },
-        {
-          label: '招标单位名称',
-          value: item.czbdwmc,
-        },
-        {
-          label: '招标代理机构',
-          value: item.czbdwmc,
-        },
-        {
-          label: '中标人名称',
-          value: item.cZhongbrmc,
-        },
-        {
-          label: '中标人统一社会信用代码',
-          value: item.cZhongbrdm,
-        },
-        {
-          label: '成交日期',
-          value: item.dggfbsj,
-        },
-        {
-          label: '成交金额',
-          value: item.nzhongbje,
-        },
-        {
-          label: '项目经理',
-          value: item.dggfbsj,
-        },
-        {
-          label: '中标人联系地址',
-          value: item.dggfbsj,
-        },
-      ]"></common-list-item>
+      ]" @click="handleClickItem(item)"></common-list-item>
     </template>
   </scroll-list>
 </template>
@@ -55,6 +19,7 @@ export default {
 import { getBiddingPageList } from '@/api/notice';
 import ScrollList from '@/components/scroll-list/index.vue';
 import CommonListItem from '@/components/common-list-item/index.vue';
+import { NOTICE_DETAIL_RICH_TEXT } from '../../const';
 
 async function fetchData(params: any) {
   const res = await getBiddingPageList({
@@ -67,6 +32,13 @@ async function fetchData(params: any) {
       total: res.total,
     },
   };
+}
+
+function handleClickItem(item: any) {
+  uni.setStorageSync(NOTICE_DETAIL_RICH_TEXT, item.cggnr)
+  uni.navigateTo({
+    url: `/pages/notice-detail/index`,
+  });
 }
 </script>
 <style lang="scss" scoped>
