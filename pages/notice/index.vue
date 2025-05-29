@@ -4,9 +4,9 @@
     <template v-if="tabIndex === 0">
       <tender-list class="list-wrap"></tender-list>
     </template>
-    <template v-else-if="tabIndex === 1">
+    <!-- <template v-else-if="tabIndex === 1">
       <candidate-list class="list-wrap"></candidate-list>
-    </template>
+    </template> -->
     <template v-else>
       <bidding-list class="list-wrap"></bidding-list>
     </template>
@@ -24,8 +24,8 @@ import CandidateList from './components/candidate-list/index.vue'
 const tabIndex = ref(0);
 const tabList = reactive([
   { label: "招标公告", value: "0" },
-  { label: "中标候选人公示", value: "1" },
-  { label: "中标结果公告", value: "2" },
+  // { label: "中标候选人公示", value: "1" },
+  { label: "中标结果公告", value: "1" },
 ]);
 
 </script>
