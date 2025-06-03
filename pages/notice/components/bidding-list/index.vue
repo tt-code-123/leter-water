@@ -35,8 +35,6 @@ async function fetchData(params: any) {
 }
 
 function handleClickItem(item: any) {
-  console.log('item.cggnr', item.cgsnr);
-
   uni.setStorageSync(NOTICE_DETAIL_RICH_TEXT, item.cgsnr)
   uni.navigateTo({
     url: `/pages/notice-detail/index`,
