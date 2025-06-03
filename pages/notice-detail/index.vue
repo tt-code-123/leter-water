@@ -1,6 +1,6 @@
 <template>
   <scroll-view class="notice-detail" :scroll-y="true" :style="{ paddingBottom: safeBottom + 'px' }">
-    <rich-text :nodes="nodes" :space="space"></rich-text>
+    <mp-html :content="nodes" />
   </scroll-view>
 </template>
 <script lang="ts" setup>
