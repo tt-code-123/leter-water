@@ -63,9 +63,17 @@ import ScrollList from "@/components/scroll-list/index.vue";
 import CustomTr from "@/components/custom-table/custom-tr.vue";
 import { getListByQiye } from "@/api/company";
 
+const props = defineProps({
+  qiyeId: {
+    type: String,
+    required: true,
+  },
+});
+
 async function fetchData(params: any) {
   const res = await getListByQiye({
     ...params,
+    qiyeId: props.qiyeId,
   });
 
   return {

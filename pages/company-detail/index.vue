@@ -3,8 +3,12 @@
     <view class="company-detail-header">
       <view class="flex-between">
         <text class="header-name">{{ qiyeInfo.qiyeName }}</text>
-        <up-icon :name="isCollect ? 'star-fill' : 'star'" :color="isCollect ? '#fadb14' : '#999'" size="24"
-          @click="handleClickStar"></up-icon>
+        <up-icon
+          :name="isCollect ? 'star-fill' : 'star'"
+          :color="isCollect ? '#fadb14' : '#999'"
+          size="24"
+          @click="handleClickStar"
+        ></up-icon>
       </view>
       <view class="address">
         <up-icon name="map-fill" color="#1677FF" size="16"></up-icon>
@@ -20,9 +24,7 @@
       </view>
       <view class="flex-between">
         <text class="header-title">登记注册类型</text>
-        <text class="header-value">{{
-          dictInfo.djzcType1
-        }}</text>
+        <text class="header-value">{{ dictInfo.djzcType1 }}</text>
       </view>
       <view class="flex-between">
         <text class="header-title">企业注册属地</text>
@@ -58,18 +60,35 @@
         </view>
       </view> -->
     </view>
-    <custom-tabs :tabs="tabList" class="tabs-list" v-model="tabIndex"></custom-tabs>
+    <custom-tabs
+      :tabs="tabList"
+      class="tabs-list"
+      v-model="tabIndex"
+    ></custom-tabs>
     <template v-if="tabIndex === 0">
-      <base-info v-if="tabIndex === 0" class="common-comp-container" :baseInfo="qiyeInfo"></base-info>
+      <base-info
+        v-if="tabIndex === 0"
+        class="common-comp-container"
+        :baseInfo="qiyeInfo"
+      ></base-info>
     </template>
     <template v-else-if="tabIndex === 1">
-      <legal-person-info :legalPersonInfo="qiyeFrInfo" class="common-comp-container"></legal-person-info>
+      <legal-person-info
+        :legalPersonInfo="qiyeFrInfo"
+        class="common-comp-container"
+      ></legal-person-info>
     </template>
     <template v-else-if="tabIndex === 2">
-      <enterprise-qualifications class="common-comp-container"></enterprise-qualifications>
+      <enterprise-qualifications
+        class="common-comp-container"
+        :qiyeId="qiyeInfo.id!"
+      ></enterprise-qualifications>
     </template>
     <template v-else-if="tabIndex === 3">
-      <basic-information-personnel class="common-comp-container" :qiyeId="qiyeInfo.id!"></basic-information-personnel>
+      <basic-information-personnel
+        class="common-comp-container"
+        :qiyeId="qiyeInfo.id!"
+      ></basic-information-personnel>
     </template>
   </view>
 </template>
@@ -96,7 +115,7 @@ const tabList = reactive([
   { value: "2", label: "企业资质信息" },
   { value: "3", label: "人员基本信息" },
 ]);
-const registrationType = ref([])
+const registrationType = ref([]);
 
 onLoad((options) => {
   detailId.value = options!.id;
@@ -105,22 +124,22 @@ onLoad((options) => {
   });
   getQiyeFr(options!.id).then((res) => {
     qiyeFrInfo.value = res;
-  })
+  });
 });
 
 onMounted(() => {
   registrationType.value = uni.getStorageSync(GwDictEnum.registrationType);
-})
+});
 
 const dictInfo = computed(() => {
-  const djzcType1: Array<string> = []
+  const djzcType1: Array<string> = [];
   registrationType.value.forEach((item: any) => {
-    if (qiyeInfo.value.djzcType1?.split(',').includes(item.codeValue)) {
-      djzcType1.push(item.codeName)
+    if (qiyeInfo.value.djzcType1?.split(",").includes(item.codeValue)) {
+      djzcType1.push(item.codeName);
     }
-  })
-  return { djzcType1: djzcType1.join(',') }
-})
+  });
+  return { djzcType1: djzcType1.join(",") };
+});
 
 function handleClickStar() {
   uni.showToast({
